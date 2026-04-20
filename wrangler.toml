@@ -1,4 +1,4 @@
-name = "my-daily-newsletter"
+name = "techpulse"
 main = "src/index.ts"
 compatibility_date = "2024-05-24"
 

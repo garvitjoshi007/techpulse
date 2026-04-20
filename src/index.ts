@@ -47,8 +47,7 @@ Pick the 10 best stories that match their interests. For each, write a sharp 2-s
 
 Output ONLY clean HTML (no <html>/<head>/<body> tags). Use exactly this structure:
 
-<h2 style="font-family:sans-serif;color:#111;margin-bottom:4px;">⚡ Tech Briefing — ${new Date().toDateString()}</h2>
-<p style="font-family:sans-serif;color:#888;font-size:13px;margin-top:0;">Your no-fluff daily digest — curated from Hacker News.</p>
+<h2 style="font-family:sans-serif;color:#111;margin-bottom:4px;">⚡ Your no-fluff daily digest — curated from Hacker News.</h2>
 <hr style="border:none;border-top:1px solid #eee;margin:16px 0;">
 
 For each of the 10 stories, output exactly:
@@ -92,7 +91,7 @@ async function sendEmail(
     body: JSON.stringify({
       from,
       to,
-      subject: `⚡ Tech Briefing — ${date}`,
+      subject: `⚡ Tech Pulse — ${date}`,
       html,
     }),
   });

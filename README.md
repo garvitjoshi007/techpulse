@@ -1,4 +1,4 @@
-# my-daily-newsletter
+# TechPulse
 
 A Cloudflare Worker that runs every day at 8 AM, fetches the top stories from Hacker News, uses Claude to curate and summarize the 10 most relevant tech stories, and emails them to you via Resend.
 
