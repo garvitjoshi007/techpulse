@@ -48,12 +48,12 @@ npm run deploy
 
 The cron trigger (`0 8 * * *` — 8 AM UTC daily) is registered automatically.
 
-Verify it's active: Cloudflare Dashboard → Workers & Pages → `my-daily-newsletter` → **Triggers**.
+Verify it's active: Cloudflare Dashboard → Workers & Pages → `techpulse` → **Triggers**.
 
 ### 5. Test immediately
 
 ```bash
-curl https://my-daily-newsletter.<your-subdomain>.workers.dev/trigger
+curl https://techpulse.<your-subdomain>.workers.dev/trigger
 ```
 
 You should get a `202 Newsletter triggered` response and receive an email within ~30 seconds.
