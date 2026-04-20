@@ -1,0 +1,7 @@
+# secrets — never commit
+.dev.vars
+
+# dependencies & build output
+node_modules/
+.wrangler/
+dist/
