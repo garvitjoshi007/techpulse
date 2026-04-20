@@ -61,7 +61,7 @@ After all 10 stories add:
 <hr style="border:none;border-top:1px solid #eee;margin:16px 0;">
 <p style="font-family:sans-serif;color:#aaa;font-size:12px;text-align:center;">Delivered daily at 8 AM · Powered by Claude + Hacker News</p>
 
-Rules: Be direct. No filler phrases. Do not add any text outside the HTML.`,
+Rules: Be direct. No filler phrases. Do not add any text outside the HTML. Do not wrap the output in markdown code blocks or backticks.`,
         },
       ],
     }),
@@ -72,12 +72,12 @@ Rules: Be direct. No filler phrases. Do not add any text outside the HTML.`,
   }
 
   const data = await response.json<{ content: Array<{ type: string; text: string }> }>();
-  return data.content[0].text;
+  return data.content[0].text.replace(/^```[a-z]*\n?/, "").replace(/\n?```$/, "").trim();
 }
 
 async function sendEmail(
   resendApiKey: string,
-  to: string,
+  to: string | string[],
   from: string,
   html: string,
   date: string
@@ -111,7 +111,8 @@ export default {
         console.log(`[newsletter] Fetched ${stories.length} stories, generating newsletter...`);
         const html = await generateNewsletter(env.ANTHROPIC_API_KEY, stories);
         console.log("[newsletter] Newsletter generated, sending email...");
-        await sendEmail(env.RESEND_API_KEY, env.TO_EMAIL, env.FROM_EMAIL, html, date);
+        const to = env.TO_EMAIL.includes(",") ? env.TO_EMAIL.split(",").map((e) => e.trim()) : env.TO_EMAIL;
+        await sendEmail(env.RESEND_API_KEY, to, env.FROM_EMAIL, html, date);
         console.log("[newsletter] Done");
       })()
     );
@@ -124,7 +125,8 @@ export default {
           const date = new Date().toDateString();
           const stories = await fetchHNStories();
           const html = await generateNewsletter(env.ANTHROPIC_API_KEY, stories);
-          await sendEmail(env.RESEND_API_KEY, env.TO_EMAIL, env.FROM_EMAIL, html, date);
+          const to = env.TO_EMAIL.includes(",") ? env.TO_EMAIL.split(",").map((e) => e.trim()) : env.TO_EMAIL;
+          await sendEmail(env.RESEND_API_KEY, to, env.FROM_EMAIL, html, date);
         })()
       );
       return new Response("Newsletter triggered", { status: 202 });

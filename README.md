@@ -46,7 +46,7 @@ npx wrangler secret put FROM_EMAIL
 npm run deploy
 ```
 
-The cron trigger (`0 8 * * *` — 8 AM UTC daily) is registered automatically.
+The cron trigger (`30 2 * * *` — 8 AM IST daily) is registered automatically.
 
 Verify it's active: Cloudflare Dashboard → Workers & Pages → `techpulse` → **Triggers**.
 
