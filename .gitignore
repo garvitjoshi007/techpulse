@@ -1,6 +1,9 @@
 # secrets — never commit
 .dev.vars
 
+# claude local settings (personal overrides)
+.claude/settings.local.json
+
 # dependencies & build output
 node_modules/
 .wrangler/

@@ -31,6 +31,7 @@ npx wrangler secret put ANTHROPIC_API_KEY
 npx wrangler secret put RESEND_API_KEY
 npx wrangler secret put TO_EMAIL
 npx wrangler secret put FROM_EMAIL
+npx wrangler secret put TRIGGER_SECRET
 ```
 
 | Secret | Description |
@@ -39,6 +40,7 @@ npx wrangler secret put FROM_EMAIL
 | `RESEND_API_KEY` | Your Resend API key |
 | `TO_EMAIL` | Email address to receive the newsletter |
 | `FROM_EMAIL` | Sender address (must be verified in Resend, e.g. `newsletter@yourdomain.com`) |
+| `TRIGGER_SECRET` | Secret token required to call the `/trigger` endpoint |
 
 ### 4. Deploy
 
@@ -53,7 +55,7 @@ Verify it's active: Cloudflare Dashboard → Workers & Pages → `techpulse` →
 ### 5. Test immediately
 
 ```bash
-curl https://techpulse.<your-subdomain>.workers.dev/trigger
+curl "https://techpulse.<your-subdomain>.workers.dev/trigger?secret=YOUR_TRIGGER_SECRET"
 ```
 
 You should get a `202 Newsletter triggered` response and receive an email within ~30 seconds.

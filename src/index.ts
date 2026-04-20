@@ -3,6 +3,7 @@ export interface Env {
   RESEND_API_KEY: string;
   TO_EMAIL: string;
   FROM_EMAIL: string;
+  TRIGGER_SECRET: string;
 }
 
 interface HNStory {
@@ -33,7 +34,7 @@ async function generateNewsletter(apiKey: string, stories: HNStory[]): Promise<s
     },
     body: JSON.stringify({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 2500,
+      max_tokens: 4096,
       messages: [
         {
           role: "user",
@@ -72,7 +73,9 @@ Rules: Be direct. No filler phrases. Do not add any text outside the HTML. Do no
   }
 
   const data = await response.json<{ content: Array<{ type: string; text: string }> }>();
-  return data.content[0].text.replace(/^```[a-z]*\n?/, "").replace(/\n?```$/, "").trim();
+  const raw = data.content[0].text.replace(/^```[a-z]*\n?/, "").replace(/\n?```$/, "").trim();
+  // Strip any incomplete trailing tag (e.g. "<p style=\"margin:0;" if truncated)
+  return raw.replace(/<[^>]*$/, "").trimEnd();
 }
 
 async function sendEmail(
@@ -120,6 +123,13 @@ export default {
 
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     if (new URL(request.url).pathname === "/trigger") {
+      const url = new URL(request.url);
+      const provided =
+        url.searchParams.get("secret") ??
+        request.headers.get("Authorization")?.replace("Bearer ", "");
+      if (!provided || provided !== env.TRIGGER_SECRET) {
+        return new Response("Unauthorized", { status: 401 });
+      }
       ctx.waitUntil(
         (async () => {
           const date = new Date().toDateString();
